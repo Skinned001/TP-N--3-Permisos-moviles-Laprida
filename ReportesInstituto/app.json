@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "ReportesInstituto",
+    "slug": "reportes-instituto",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "reportesinstituto",
+    "userInterfaceStyle": "dark",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Usamos tu cámara para escanear aulas y documentar desperfectos del edificio.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Usamos tu ubicación para localizar desperfectos en el edificio."
+        }
+      ]
+    ],
+    "android": {
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO"
+      ]
+    },
+    "ios": {
+      "supportsTablet": true
+    }
+  }
+}
