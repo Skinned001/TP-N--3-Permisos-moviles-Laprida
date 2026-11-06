@@ -27,7 +27,8 @@
           "photosPermission": "Usamos el acceso a tu galería para que puedas adjuntar fotos del problema reportado.",
           "cameraPermission": "Usamos tu cámara para que puedas sacar fotos del desperfecto en el momento."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "android": {
       "blockedPermissions": [
