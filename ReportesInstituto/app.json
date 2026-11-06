@@ -11,15 +11,21 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Usamos tu cámara para escanear aulas y documentar desperfectos del edificio.",
-          "microphonePermission": false,
+          "cameraPermission": "Usamos tu cámara para escanear el código QR del aula y reportar el desperfecto más rápido.",
           "recordAudioAndroid": false
         }
       ],
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Usamos tu ubicación para localizar desperfectos en el edificio."
+          "locationAlwaysAndWhenInUsePermission": "Usamos tu ubicación para autocompletar el sector del Instituto Politécnico Formosa donde te encontrás."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Usamos el acceso a tu galería para que puedas adjuntar fotos del problema reportado.",
+          "cameraPermission": "Usamos tu cámara para que puedas sacar fotos del desperfecto en el momento."
         }
       ]
     ],
