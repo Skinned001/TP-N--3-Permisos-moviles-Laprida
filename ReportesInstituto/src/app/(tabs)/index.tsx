@@ -1,10 +1,37 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, Pressable, TextInput, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
 import { useReportes } from '../../context/ReportesContext';
 
 export default function IndexScreen() {
   const { reportes } = useReportes();
+  const [busqueda, setBusqueda] = useState('');
+  const [filtroEstado, setFiltroEstado] = useState('Todos');
+
+  const reportesProcesados = useMemo(() => {
+    const termino = busqueda.toLowerCase();
+    const pesosEstado: Record<string, number> = {
+      pendiente: 1,
+      'en curso': 2,
+      resuelto: 3,
+    };
+
+    return reportes
+      .filter((reporte) => {
+        const coincideBusqueda =
+          reporte.titulo.toLowerCase().includes(termino) ||
+          reporte.aula_sector.toLowerCase().includes(termino);
+        const coincideEstado =
+          filtroEstado === 'Todos' || reporte.estado.toLowerCase() === filtroEstado.toLowerCase();
+
+        return coincideBusqueda && coincideEstado;
+      })
+      .sort(
+        (a, b) =>
+          (pesosEstado[a.estado.toLowerCase()] ?? 4) -
+          (pesosEstado[b.estado.toLowerCase()] ?? 4),
+      );
+  }, [reportes, busqueda, filtroEstado]);
 
   // Función auxiliar para el color del punto de estado
   const getStatusColor = (estado: string) => {
@@ -32,9 +59,40 @@ export default function IndexScreen() {
     <View style={styles.container}>
       <Text style={styles.header}>Reportes del Instituto</Text>
       <Text style={styles.subHeader}>Instituto Politécnico Formosa</Text>
-      
+
+      <View style={styles.controls}>
+        <TextInput
+          style={styles.searchInput}
+          value={busqueda}
+          onChangeText={setBusqueda}
+          placeholder="Buscar por palabra o sector..."
+          placeholderTextColor="#94A3B8"
+        />
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filters}
+        >
+          {['Todos', 'Pendiente', 'En curso', 'Resuelto'].map((estado) => {
+            const activo = filtroEstado === estado;
+
+            return (
+              <Pressable
+                key={estado}
+                style={[styles.filterButton, { backgroundColor: activo ? '#06B6D4' : '#334155' }]}
+                onPress={() => setFiltroEstado(estado)}
+              >
+                <Text style={[styles.filterText, { color: activo ? '#000000' : '#FFFFFF' }]}>
+                  {estado}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+      </View>
+
       <FlatList
-        data={reportes}
+        data={reportesProcesados}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
@@ -66,6 +124,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingHorizontal: 20,
     paddingBottom: 15,
+  },
+  controls: {
+    paddingHorizontal: 20,
+    marginBottom: 12,
+  },
+  searchInput: {
+    backgroundColor: '#334155',
+    color: '#FFFFFF',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+  },
+  filters: {
+    gap: 8,
+  },
+  filterButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 20,
+  },
+  filterText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   listContent: {
     paddingHorizontal: 20,
